@@ -1,6 +1,10 @@
 package com.upc.edu.E03.controller;
 
 
+import com.upc.edu.E03.exception.ValidationException;
+import com.upc.edu.E03.model.Account;
+import com.upc.edu.E03.repository.AccountRepository;
+import com.upc.edu.E03.service.AccountService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -35,7 +39,7 @@ public class AccountController {
     @Transactional(readOnly = true)
     @RequestMapping("/accounts/filterByNameCustomer")
     public ResponseEntity<List<Account>> getAccountsBynameCustomer(@RequestParam("nameCustomer") String nameCustomer){
-        return new ResponseEntity<List<Account>>(accountRepository.findBynameCustomer(nameCustomer), HttpStatus.OK);
+        return new ResponseEntity<List<Account>>(accountRepository.findByNameCustomer(nameCustomer), HttpStatus.OK);
 
     }
 
@@ -74,7 +78,7 @@ public class AccountController {
     }
 
     private void existByNumberAccountAndNameCustomer(Account account) {
-        if (accountRepository.existsBynumberAccountAndnameCustomer(account.getNumberAccount(), account.getNameCustomer())) {
+        if (accountRepository.existsByNameCustomerAndNumberAccount(account.getNumberAccount(), account.getNameCustomer())) {
             throw new ValidationException("No se puede registrar la cuenta porque ya existe una con esos datos");
         }
     }
